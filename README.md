@@ -19,6 +19,8 @@ end
 - a Phoenix App with phoenix `1.1` and up
 
 ## Usage
+
+### With Phoenix
 You need to have a working phoenix app to use `phoenix_facebook_messenger`.
 
 To create an echo back bot, do the following:
@@ -61,5 +63,10 @@ To get the `facebook_page_token` and `challenge_verification_token` follow the i
 
 For the webhook endpoint use `http://your-app-url/api/webhook`
 
+### With plug
+If you use plug in your project, then you need the plug version of `facebook_messenger` this can be found at [found here](https://github.com/oarrabi/facebook_messenger).
+
 ## Sample
-A sample facebook chat echo bot can be found [here](https://github.com/oarrabi/elixir-echo-bot).
+
+- A sample facebook echo bot with plug can be found here. https://github.com/oarrabi/plug_facebook_echo_bot
+- For the phoenix echo bot, https://github.com/oarrabi/phoenix_facebook_echo_bot
