@@ -1,11 +1,11 @@
-defmodule FacebookMessenger.Mixfile do
+defmodule FacebookMessenger.Phoenix.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :facebook_messenger,
-     name: "ExFacebookMessenger",
+    [app: :phoenix_facebook_messenger,
+     name: "PhoenixFacebookMessenger",
      source_url: "https://github.com/oarrabi/EXFacebook-Messenger",
-     version: "0.2.0",
+     version: "0.1.0",
      docs: [ extras: ["README.md"] ],
      elixir: "~> 1.0",
      build_embedded: Mix.env == :prod,
@@ -34,8 +34,8 @@ defmodule FacebookMessenger.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:poison, "~> 2.1.0", override: true},
-     {:httpotion, "~> 2.2"},
      {:phoenix, "~> 1.1"},
+     {:facebook_messenger, path: "../facebook_messenger/"},
      {:coverex, "~> 1.4.8", only: :test},
      {:inch_ex, only: :docs},
      {:ex_doc, "~> 0.7", only: :dev},
@@ -44,7 +44,7 @@ defmodule FacebookMessenger.Mixfile do
 
   defp description do
     """
-    ExFacebookMessenger is a library that easy the creation of facebook messenger bots.
+    PhoenixFacebookMessenger is a library that easy the creation of facebook messenger bots.
     """
   end
 

@@ -9,7 +9,7 @@ defmodule TestController do
   end
 end
 
-defmodule FacebookMessenger.Controller.Test do
+defmodule FacebookMessenger.Phoenix.Controller.Test do
   use Test.ConnCase
 
   test "it returns the passed challenge if token matches" do
