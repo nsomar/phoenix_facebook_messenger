@@ -10,12 +10,13 @@ defmodule FacebookMessenger.Phoenix.Controller do
     quote do
       require Logger
       use Phoenix.Controller
-      import FacebookMessenger.Controller
+      import FacebookMessenger
       @behaviour FacebookMessenger.Callback
 
       @callback_handler __MODULE__
 
       def challenge(conn, params) do
+
         case check_challenge(params) do
           {:ok, challenge} ->
             inform_callback(:challenge_successfull, [params])
@@ -40,7 +41,7 @@ defmodule FacebookMessenger.Phoenix.Controller do
         respond.(conn)
       end
 
-      def inform_and_reply({:error}, conn) do
+      def inform_and_reply(:error, conn) do
         conn = resp(conn, 500, "")
         respond.(conn)
       end
