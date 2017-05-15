@@ -2,18 +2,20 @@ defmodule FacebookMessenger.Phoenix.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :phoenix_facebook_messenger,
-     name: "PhoenixFacebookMessenger",
-     source_url: "https://github.com/oarrabi/phoenix_facebook_messenger",
-     version: "0.3.0",
-     docs: [ extras: ["README.md"] ],
-     elixir: "~> 1.0",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     test_coverage: [tool: Coverex.Task, coveralls: true],
-     deps: deps,
-     package: package,
-     description: description]
+    [
+      app: :phoenix_facebook_messenger,
+      name: "PhoenixFacebookMessenger",
+      source_url: "https://github.com/oarrabi/phoenix_facebook_messenger",
+      version: "0.4.0",
+      docs: [ extras: ["README.md"] ],
+      elixir: "~> 1.0",
+      build_embedded: Mix.env == :prod,
+      start_permanent: Mix.env == :prod,
+      test_coverage: [tool: Coverex.Task, coveralls: true],
+      deps: deps(),
+      package: package(),
+      description: description()
+    ]
   end
 
   # Configuration for the OTP application
@@ -35,7 +37,7 @@ defmodule FacebookMessenger.Phoenix.Mixfile do
   defp deps do
     d =
     [{:phoenix, "~> 1.1"},
-     {:facebook_messenger, "~> 0.3.0"},
+     {:facebook_messenger, "~> 0.4.0"},
      {:inch_ex, only: :docs},
      {:ex_doc, "~> 0.7", only: :dev},
      {:earmark, "~> 0.1", only: :docs}]
@@ -56,6 +58,7 @@ defmodule FacebookMessenger.Phoenix.Mixfile do
   defp package do
     [ files: [ "lib", "mix.exs", "README.md",],
       maintainers: [ "Omar Abdelhafith" ],
+      licenses: ["MIT"],
       links: %{ "GitHub" => "https://github.com/oarrabi/exrequester" } ]
   end
 end
