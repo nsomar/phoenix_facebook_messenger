@@ -10,65 +10,81 @@ defmodule FacebookMessenger.Phoenix.Controller do
     quote do
       require Logger
       use Phoenix.Controller
-      import FacebookMessenger
+
       @behaviour FacebookMessenger.Callback
 
       @callback_handler __MODULE__
 
-      def challenge(conn, params) do
+      ## overridable
 
-        case check_challenge(params) do
+      def get_verify_token(conn) do
+        Application.get_env(:facebook_messenger, :challenge_verification_token)
+      end
+      def challenge_successful(_conn, _params), do: :ok
+      def challenge_failed(_conn, _params), do: :ok
+
+      defoverridable [get_verify_token: 1, challenge_successful: 2, challenge_failed: 2]
+
+      ## actions
+
+      def challenge(conn, params) do
+        case check_challenge(conn, params) do
           {:ok, challenge} ->
-            inform_callback(:challenge_successfull, [params])
-            conn = resp(conn, 200, challenge)
-            respond.(conn)
-          _ ->
-            inform_callback(:challenge_failed, [params])
+            challenge_successful(conn, params)
+            conn
+            |> resp(200, challenge)
+            |> responder().respond()
+          :error ->
+            challenge_failed(conn, params)
             invalid_token(conn, params)
         end
       end
 
       def webhook(conn, params) do
         params
-        |> parse_message
+        |> FacebookMessenger.parse_message()
         |> inform_and_reply(conn)
       end
 
-      def inform_and_reply({:ok, message}, conn) do
-        @callback_handler.message_received(message)
+      ## private
 
-        conn = resp(conn, 200, "")
-        respond.(conn)
+      defp inform_and_reply({:ok, message}, conn) do
+        status =
+          case @callback_handler.message_received(conn, message) do
+            :error -> 500
+            _ -> 200
+          end
+        conn
+        |> resp(status, "")
+        |> responder().respond()
       end
 
-      def inform_and_reply(:error, conn) do
-        conn = resp(conn, 500, "")
-        respond.(conn)
+      defp inform_and_reply(:error, conn) do
+        conn
+        |> resp(500, "")
+        |> responder().respond()
       end
 
       defp invalid_token(conn, params) do
         Logger.error("Bad request #{inspect(conn)} with params #{inspect(params)}")
-
-        conn = resp(conn, 500, "")
-        respond.(conn)
-      end
-
-      defp respond do
-        &responder.respond/1
+        conn
+        |> resp(500, "")
+        |> responder().respond()
       end
 
       defp responder do
         Application.get_env(:facebook_messenger, :responder) || FacebookMessenger.Responder
       end
 
-      defp inform_callback(event, params) do
-        case @callback_handler.__info__(:functions)[event] do
-          nil ->
-            nil
-          _ ->
-            apply(@callback_handler, event, params)
+      defp check_challenge(conn, %{"hub.mode" => "subscribe", "hub.verify_token" => token, "hub.challenge" => challenge} = params) do
+
+        case token == get_verify_token(conn) do
+          true -> {:ok, challenge}
+          false -> :error
         end
       end
+      defp check_challenge(_conn, params), do: :error
+
 
     end
   end
