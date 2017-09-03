@@ -7,16 +7,16 @@ defmodule FacebookMessenger.Callback do
   @doc """
   function called when a message is received from facebook
   """
-  @callback message_received(FacebookMessenger.Response) :: any
+  @callback message_received(Plug.Conn.t, FacebookMessenger.Response) :: any
 
   @doc """
   called when a challenge has been received from facebook and the challenge succeeeded
   """
-  @callback challenge_successfull(any) :: any
+  @callback challenge_successful(Plug.Conn.t, any) :: any
 
   @doc """
   called when a challenge has been received from facebook and the challenge failed
   """
-  @callback challenge_failed(any) :: any
+  @callback challenge_failed(Plug.Conn.t, any) :: any
 
 end

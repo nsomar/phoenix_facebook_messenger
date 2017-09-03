@@ -2,7 +2,7 @@
 defmodule TestController do
   use FacebookMessenger.Phoenix.Controller
 
-  def message_received(msg) do
+  def message_received(%Plug.Conn{}, msg) do
     text = FacebookMessenger.Response.message_texts(msg) |> hd
     sender = FacebookMessenger.Response.message_senders(msg) |> hd
     FacebookMessenger.Sender.send(sender, text)
@@ -32,8 +32,8 @@ defmodule FacebookMessenger.Phoenix.Controller.Test do
     defmodule TestController2 do
       use FacebookMessenger.Phoenix.Controller
 
-      def challenge_successfull(params) do
-        send(self, 1)
+      def challenge_successful(_conn, _params) do
+        send(self(), 1)
       end
     end
 
@@ -48,8 +48,8 @@ defmodule FacebookMessenger.Phoenix.Controller.Test do
     defmodule TestController2 do
       use FacebookMessenger.Phoenix.Controller
 
-      def challenge_failed(params) do
-        send(self, 2)
+      def challenge_failed(_conn, params) do
+        send(self(), 2)
       end
     end
 
